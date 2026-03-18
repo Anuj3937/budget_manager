@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import {
   Card,
   CardContent,
@@ -35,16 +35,26 @@ const chartConfig = {
 
 export default function IncomeExpenseChart({ data }: { data: ChartData }) {
   return (
-    <Card className="lg:col-span-4 h-full">
+    <Card className="lg:col-span-4 h-full border-border/50 bg-card/60 backdrop-blur-sm shadow-xl">
       <CardHeader>
-        <CardTitle>Income vs. Expenses</CardTitle>
-        <CardDescription>Last 6 months</CardDescription>
+        <CardTitle className="tracking-tight text-2xl font-bold font-headline">Cashflow Velocity</CardTitle>
+        <CardDescription>Income versus expenses over time</CardDescription>
       </CardHeader>
       <CardContent className="pl-2">
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
           <ResponsiveContainer>
-            <BarChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 5 }}>
+              <defs>
+                <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-income)" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="var(--color-income)" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-expenses)" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="var(--color-expenses)" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--muted-foreground)/0.2)" />
               <XAxis
                 dataKey="month"
                 tickLine={false}
@@ -61,13 +71,27 @@ export default function IncomeExpenseChart({ data }: { data: ChartData }) {
                 tickFormatter={(value) => `$${value / 1000}k`}
               />
               <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
+                cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '3 3' }}
+                content={<ChartTooltipContent indicator="line" />}
               />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar dataKey="income" fill="var(--color-income)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="expenses" fill="var(--color-expenses)" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Area 
+                type="monotone" 
+                dataKey="income" 
+                stroke="var(--color-income)" 
+                strokeWidth={3}
+                fillOpacity={1} 
+                fill="url(#colorIncome)" 
+              />
+              <Area 
+                type="monotone" 
+                dataKey="expenses" 
+                stroke="var(--color-expenses)" 
+                strokeWidth={3}
+                fillOpacity={1} 
+                fill="url(#colorExpenses)" 
+              />
+            </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
       </CardContent>

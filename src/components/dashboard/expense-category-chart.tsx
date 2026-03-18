@@ -54,7 +54,15 @@ const chartConfig = {
   },
 };
 
-export default function ExpenseCategoryChart({ data }: { data: ChartData }) {
+export default function ExpenseCategoryChart({ 
+  data, 
+  onCategorySelect, 
+  selectedCategory 
+}: { 
+  data: ChartData;
+  onCategorySelect?: (name: string) => void;
+  selectedCategory?: string | null;
+}) {
   const totalValue = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.value, 0);
   }, [data]);
@@ -62,8 +70,8 @@ export default function ExpenseCategoryChart({ data }: { data: ChartData }) {
   return (
     <Card className="flex flex-col lg:col-span-3 h-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Expenses by Category</CardTitle>
-        <CardDescription>This month's spending breakdown</CardDescription>
+        <CardTitle className="tracking-tight text-2xl font-bold font-headline">Category Breakdown</CardTitle>
+        <CardDescription>Click a slice to filter transactions</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -82,6 +90,8 @@ export default function ExpenseCategoryChart({ data }: { data: ChartData }) {
                 nameKey="name"
                 innerRadius={60}
                 strokeWidth={5}
+                onClick={(entry) => onCategorySelect && onCategorySelect(entry.name)}
+                className="cursor-pointer transition-all hover:opacity-80"
               >
               </Pie>
               <ChartLegend
