@@ -31,13 +31,13 @@ export default function AppSidebar() {
       <SidebarContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href="/">
+            <Link href="/dashboard">
               <SidebarMenuButton
-                isActive={pathname === "/"}
-                icon={<LayoutDashboard />}
+                isActive={pathname === "/dashboard"}
                 tooltip="Dashboard"
               >
-                Dashboard
+                <LayoutDashboard />
+                <span>Dashboard</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -45,10 +45,10 @@ export default function AppSidebar() {
              <Link href="/budgets">
               <SidebarMenuButton
                 isActive={pathname === "/budgets"}
-                icon={<FolderKanban />}
                 tooltip="Budgets"
               >
-                Budgets
+                <FolderKanban />
+                <span>Budgets</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -56,10 +56,10 @@ export default function AppSidebar() {
             <Link href="/categories">
               <SidebarMenuButton
                 isActive={pathname === "/categories"}
-                icon={<ListChecks />}
                 tooltip="Categories"
               >
-                Categories
+                <ListChecks />
+                <span>Categories</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
@@ -67,10 +67,10 @@ export default function AppSidebar() {
             <Link href="/reports">
               <SidebarMenuButton
                 isActive={pathname === "/reports"}
-                icon={<LineChart />}
                 tooltip="Reports"
               >
-                Reports
+                <LineChart />
+                <span>Reports</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>

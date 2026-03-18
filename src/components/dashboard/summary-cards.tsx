@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
+import NumberFlow from '@number-flow/react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 type SummaryData = {
@@ -52,7 +53,9 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
           <Wallet className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{formatCurrency(data.totalBalance)}</div>
+          <div className="text-2xl font-bold">
+            <NumberFlow value={data.totalBalance} format={{ style: 'currency', currency: 'USD' }} />
+          </div>
           <p className="text-xs text-muted-foreground">+2.1% from last month</p>
         </CardContent>
       </Card>
@@ -62,7 +65,9 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
           <ArrowUpCircle className="h-4 w-4 text-emerald-400" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-emerald-400">{formatCurrency(data.monthlyIncome)}</div>
+          <div className="text-2xl font-bold text-emerald-400">
+            <NumberFlow value={data.monthlyIncome} format={{ style: 'currency', currency: 'USD' }} />
+          </div>
           <p className="text-xs text-muted-foreground">This month's earnings</p>
         </CardContent>
       </Card>
@@ -72,7 +77,9 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
           <ArrowDownCircle className="h-4 w-4 text-rose-400" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-rose-400">{formatCurrency(data.monthlyExpenses)}</div>
+          <div className="text-2xl font-bold text-rose-400">
+            <NumberFlow value={data.monthlyExpenses} format={{ style: 'currency', currency: 'USD' }} />
+          </div>
           <p className="text-xs text-muted-foreground">This month's spending</p>
         </CardContent>
       </Card>

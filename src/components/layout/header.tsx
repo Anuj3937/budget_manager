@@ -38,7 +38,7 @@ export default function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/60 backdrop-blur-md px-4 md:px-6">
       <SidebarTrigger className="md:hidden" />
       <div className="flex items-center gap-2">
         <h1 className="font-headline text-xl font-bold text-foreground">{getTitleFromPathname(pathname)}</h1>
