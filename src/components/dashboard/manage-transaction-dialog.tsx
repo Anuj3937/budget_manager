@@ -60,9 +60,7 @@ const transactionSchema = z.object({
   type: z.enum(["income", "expense"], {
     required_error: "You need to select a transaction type.",
   }),
-  categoryId: z.string({
-    required_error: "Please select a category.",
-  }),
+  categoryId: z.string().optional().or(z.literal("uncategorized")),
   transactionDate: z.date({
     required_error: "A date is required.",
   }),
@@ -134,13 +132,15 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
     setIsSubmitting(true);
     
     const selectedCategory = categories?.find(c => c.id === data.categoryId);
+    const finalCategoryName = data.categoryId === "uncategorized" || !data.categoryId ? "Uncategorized" : selectedCategory?.name;
 
     try {
       if (isEditing) {
         const docRef = doc(firestore, `users/${user.uid}/transactions/${transaction.id}`);
         updateDocumentNonBlocking(docRef, {
             ...data,
-            categoryName: selectedCategory?.name,
+            categoryId: data.categoryId === "uncategorized" ? null : data.categoryId,
+            categoryName: finalCategoryName,
             updatedAt: serverTimestamp(),
         });
         toast({ title: "Transaction Updated" });
@@ -149,7 +149,8 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
         addDocumentNonBlocking(collectionRef, {
           ...data,
           userId: user.uid,
-          categoryName: selectedCategory?.name,
+          categoryId: data.categoryId === "uncategorized" ? null : data.categoryId,
+          categoryName: finalCategoryName,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
@@ -247,6 +248,7 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="uncategorized">Uncategorized</SelectItem>
                       {filteredCategories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.name}
