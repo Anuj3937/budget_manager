@@ -1,0 +1,183 @@
+/**
+ * Core Philosophy: This ruleset enforces a strict user-ownership model where all
+ * data is partitioned by user. A user can only access data that exists within
+ * their own dedicated document tree, ensuring strong data privacy and isolation.
+ *
+ * Data Structure: All data is organized hierarchically under the top-level
+ * `/users` collection. Each user has a root document at `/users/{userId}`, where
+ * the document ID matches their Firebase Authentication UID. All their related
+ * data, such as categories, transactions, and budgets, are stored in subcollections
+ * under this root document.
+ *
+ * Key Security Decisions:
+ * - User Enumeration is Disabled: Listing documents in the top-level `/users`
+ *   collection is explicitly forbidden to protect user privacy.
+ * - Strict Ownership: All read and write operations are gated by an ownership
+ *   check, ensuring users can only interact with their own data. There is no
+ *   concept of shared or public data in this model.
+ * - Authorization by Path: The hierarchical structure is the primary mechanism
+ *   for authorization. Rules simply check if the requesting user's UID matches
+ *   the `{userId}` wildcard in the document path.
+ *
+ * Denormalization for Authorization: To ensure fast and simple authorization,
+ * a `userId` field is denormalized onto every document within a user's
+ * subcollections (e.g., categories, transactions). The rules enforce that this
+ * field matches the `{userId}` from the path upon creation and remains immutable,
+ * creating a secure and performant link to the owner without needing to read
+ * parent documents.
+ *
+ * Structural Segregation: The entire data model is built on structural
+ * segregation. By nesting all user-specific data in subcollections under
+ * `/users/{userId}`, we inherently separate one user's private data from
+ * another's. This makes list queries simple and secure by default.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns true if the user is signed in.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Returns true if the requesting user's UID matches the given userId.
+     * This is the primary function for enforcing data ownership.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Returns true if the document being accessed already exists in Firestore.
+     * Used to prevent updates or deletes on non-existent documents.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * A composite function that checks for ownership on an existing document.
+     * Essential for securing all update and delete operations.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && isExistingDoc();
+    }
+    
+    /**
+     * Validates the integrity of a new UserProfile document.
+     * Ensures the internal `id` field matches the document's ID (`userId`).
+     */
+    function isValidUserProfileCreation(userId) {
+      let data = request.resource.data;
+      return data.id == userId;
+    }
+
+    /**
+     * Validates the integrity of a new document in a user's subcollection.
+     * Ensures the denormalized `userId` field matches the owner's UID from the path.
+     */
+    function isValidOwnedDocCreation(userId) {
+      let data = request.resource.data;
+      return data.userId == userId;
+    }
+
+    /**
+     * Enforces immutability of the internal `id` field for a UserProfile document.
+     * This prevents the primary identifier from being changed after creation.
+     */
+    function isImmutableUserId() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Enforces immutability of the denormalized `userId` ownership link.
+     * This prevents a document from being reassigned to a different user.
+     */
+    function isImmutableOwnerLink() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+    // -------------------------------------------------------------------------
+    // User Profiles (/users/{userId})
+    // -------------------------------------------------------------------------
+
+    /**
+     * @description Controls access to a user's own profile document.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user creating their own profile document.
+     * @deny (list) Any user attempting to list all user profiles.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // CRITICAL: Prevents listing all users in the app.
+      allow create: if isOwner(userId) && isValidUserProfileCreation(userId);
+      allow update: if isExistingOwner(userId) && isImmutableUserId();
+      allow delete: if isExistingOwner(userId);
+
+      // -----------------------------------------------------------------------
+      // Categories Subcollection (/users/{userId}/categories/{categoryId})
+      // -----------------------------------------------------------------------
+
+      /**
+       * @description Controls access to a user's financial categories.
+       * @path /users/{userId}/categories/{categoryId}
+       * @allow (get, list, create, update, delete) The owner of the data.
+       * @deny (get) A different authenticated user trying to read a category.
+       * @principle Enforces document ownership for all operations.
+       */
+      match /categories/{categoryId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidOwnedDocCreation(userId);
+        allow update: if isExistingOwner(userId) && isImmutableOwnerLink();
+        allow delete: if isExistingOwner(userId);
+      }
+
+      // -----------------------------------------------------------------------
+      // Transactions Subcollection (/users/{userId}/transactions/{transactionId})
+      // -----------------------------------------------------------------------
+
+      /**
+       * @description Controls access to a user's financial transactions.
+       * @path /users/{userId}/transactions/{transactionId}
+       * @allow (create) The user creating a transaction for themselves.
+       * @deny (update) A different user trying to modify a transaction.
+       * @principle Validates relational integrity between documents. The `userId` field in the transaction must match the user's ID in the path.
+       */
+      match /transactions/{transactionId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidOwnedDocCreation(userId);
+        allow update: if isExistingOwner(userId) && isImmutableOwnerLink();
+        allow delete: if isExistingOwner(userId);
+      }
+
+      // -----------------------------------------------------------------------
+      // Budgets Subcollection (/users/{userId}/budgets/{budgetId})
+      // -----------------------------------------------------------------------
+
+      /**
+       * @description Controls access to a user's budgets.
+       * @path /users/{userId}/budgets/{budgetId}
+       * @allow (list) The user listing all of their own budgets.
+       * @deny (delete) A different user trying to delete a budget.
+       * @principle Enforces strict data isolation within the user's data tree.
+       */
+      match /budgets/{budgetId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidOwnedDocCreation(userId);
+        allow update: if isExistingOwner(userId) && isImmutableOwnerLink();
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+  }
+}
