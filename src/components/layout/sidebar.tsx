@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { CircleDollarSign, LayoutDashboard, FolderKanban, ListChecks, LineChart } from "lucide-react";
+import { LayoutDashboard, FolderKanban, ListChecks, LineChart } from "lucide-react";
 import {
   Sidebar,
   SidebarHeader,
@@ -24,8 +25,8 @@ export default function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <Button variant="ghost" className="flex-1 justify-start gap-2">
-            <CircleDollarSign className="size-6 text-primary" />
-            <span className={cn("font-headline text-lg font-semibold", open ? "" : "hidden")}>Cashflow Clarity</span>
+            <Image src="/logo.png" alt="Horizon Logo" width={24} height={24} className="rounded object-contain" />
+            <span className={cn("font-headline text-lg font-semibold", open ? "" : "hidden")}>Horizon</span>
         </Button>
       </SidebarHeader>
       <SidebarContent>

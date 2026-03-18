@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/dashboard', '/api', '/budgets', '/categories', '/reports'],
     },
-    sitemap: 'https://cashflowclarity.vercel.app/sitemap.xml',
+    sitemap: 'https://horizon-finance.vercel.app/sitemap.xml',
   };
 }

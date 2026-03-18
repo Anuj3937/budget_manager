@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Cashflow Clarity | Premium Expense Tracker';
+export const alt = 'Horizon | Premium Expense Tracker';
 export const size = {
   width: 1200,
   height: 630,

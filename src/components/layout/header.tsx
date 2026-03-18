@@ -21,7 +21,7 @@ const getTitleFromPathname = (pathname: string) => {
     case "/reports":
       return "Reports";
     default:
-      return "Cashflow Clarity";
+      return "Horizon";
   }
 };
 

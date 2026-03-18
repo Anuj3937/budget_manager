@@ -10,7 +10,7 @@ export default function BlogHub() {
     <div className="container mx-auto py-12 px-6">
       <h1 className="text-4xl font-headline font-bold mb-4">Financial Insights</h1>
       <p className="text-lg text-muted-foreground mb-8">
-        Welcome to the Cashflow Clarity blog. Here you'll find the best tips from our founders on managing your money.
+        Welcome to the Horizon blog. Here you'll find the best tips from our founders on managing your money.
       </p>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Mock Blog Card */}

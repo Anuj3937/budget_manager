@@ -6,25 +6,25 @@ import { ThemeProvider } from '@/components/shared/theme-provider';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Cashflow Clarity | Premium Expense Tracker',
-    template: '%s | Cashflow Clarity'
+    default: 'Horizon | Premium Expense Tracker',
+    template: '%s | Horizon'
   },
-  description: 'Take control of your finances with Cashflow Clarity. A premium, modern expense tracker with powerful analytics, budgeting, and beautiful visualizations.',
+  description: 'Take control of your finances with Horizon. A premium, modern expense tracker with powerful analytics, budgeting, and beautiful visualizations.',
   keywords: ['Expense Tracker', 'Personal Finance', 'Budgeting', 'Financial Dashboard', 'Money Management'],
-  authors: [{ name: 'Cashflow Clarity' }],
-  creator: 'Cashflow Clarity',
+  authors: [{ name: 'Horizon' }],
+  creator: 'Horizon',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://cashflowclarity.vercel.app',
-    title: 'Cashflow Clarity | Premium Expense Tracker',
-    description: 'Take control of your finances with Cashflow Clarity. A premium, modern expense tracker with powerful analytics and beautiful visualizations.',
-    siteName: 'Cashflow Clarity',
+    url: 'https://horizon-finance.vercel.app',
+    title: 'Horizon | Premium Expense Tracker',
+    description: 'Take control of your finances with Horizon. A premium, modern expense tracker with powerful analytics and beautiful visualizations.',
+    siteName: 'Horizon',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cashflow Clarity | Premium Expense Tracker',
-    description: 'Take control of your finances with Cashflow Clarity. A premium, modern expense tracker with powerful analytics and beautiful visualizations.',
+    title: 'Horizon | Premium Expense Tracker',
+    description: 'Take control of your finances with Horizon. A premium, modern expense tracker with powerful analytics and beautiful visualizations.',
   },
   manifest: '/manifest.json',
 };

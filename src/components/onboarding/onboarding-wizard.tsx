@@ -89,7 +89,7 @@ export default function OnboardingWizard() {
         {step === 1 && (
           <>
             <CardHeader>
-              <CardTitle className="text-center text-3xl">Welcome to Cashflow Clarity!</CardTitle>
+              <CardTitle className="text-center text-3xl">Welcome to Horizon!</CardTitle>
               <CardDescription className="text-center">Let's get your financial dashboard set up in just a few moments.</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center">

@@ -75,7 +75,7 @@ export function UserAuthForm({
 
         toast({
           title: "Account Created",
-          description: "Welcome to Cashflow Clarity!",
+          description: "Welcome to Horizon!",
         });
       } else {
         await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -141,7 +141,7 @@ export function UserAuthForm({
 
       toast({
         title: "Signed In with Google",
-        description: "Welcome to Cashflow Clarity!",
+        description: "Welcome to Horizon!",
       });
     } catch (error: any) {
       toast({

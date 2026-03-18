@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Cashflow Clarity",
-  "short_name": "Cashflow",
+  "name": "Horizon",
+  "short_name": "Horizon",
   "description": "A modern, premium Personal Finance Expense Tracker.",
   "icons": [
     {

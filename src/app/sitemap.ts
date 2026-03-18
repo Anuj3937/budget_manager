@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cashflowclarity.vercel.app';
+  const baseUrl = 'https://horizon-finance.vercel.app';
 
   // These would ideally come from your CMS or Database
   const staticRoutes = [

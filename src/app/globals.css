@@ -82,3 +82,21 @@
     @apply bg-background/60 backdrop-blur-md border border-border/50 shadow-lg;
   }
 }
+.hero-container { position: relative; width: 100%; background: #000; color: #fff; }
+.hero-canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; width: 100vw; height: 100vh; }
+.side-menu { position: fixed; left: 2rem; top: 50%; transform: translateY(-50%); z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+.menu-icon { display: flex; flex-direction: column; gap: 0.3rem; }
+.menu-icon span { width: 30px; height: 2px; background: white; }
+.vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: 4px; font-size: 0.8rem; font-weight: bold; }
+.hero-content { position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; height: 100vh; padding-left: 10%; pointer-events: none; }
+.hero-title { font-size: 10vw; line-height: 1; font-weight: 900; letter-spacing: -2px; margin: 0; }
+.title-char { display: inline-block; }
+.hero-subtitle { margin-top: 2rem; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+.subtitle-line { overflow: hidden; }
+.scroll-progress { position: fixed; right: 2rem; bottom: 4rem; z-index: 50; display: flex; align-items: center; gap: 1rem; }
+.scroll-text { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+.progress-track { width: 100px; height: 2px; background: rgba(255,255,255,0.2); }
+.progress-fill { height: 100%; background: white; transition: width 0.1s linear; }
+.section-counter { font-size: 0.8rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+.scroll-sections { position: relative; width: 100%; z-index: 5; pointer-events: none; }
+.content-section { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-left: 10%; opacity: 1; position: relative; z-index: 10;}
