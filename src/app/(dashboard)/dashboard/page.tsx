@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
@@ -151,7 +151,7 @@ export default function DashboardPage() {
         </div>
         <div className="grid grid-cols-1 gap-4 md:gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            {isLoading ? <Skeleton className="h-[400px]" /> : <TransactionHistory transactions={transactions || []} />}
+            {isLoading ? <Skeleton className="h-[300px] md:h-[400px]" /> : <TransactionHistory transactions={transactions || []} />}
           </div>
           <div className="space-y-4 lg:space-y-8">
             {isLoading ? (

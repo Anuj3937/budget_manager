@@ -1,6 +1,6 @@
 {
-  "theme_color": "#2a2238",
-  "background_color": "#2a2238",
+  "theme_color": "#030816",
+  "background_color": "#030816",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
@@ -10,13 +10,14 @@
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/png"
     },
     {
       "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
