@@ -3,9 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/firebase";
 import { Component as HorizonHero } from "@/components/ui/horizon-hero-section";
 
 export default function LandingPage() {
+  const { user, isUserLoading } = useUser();
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -36,14 +39,24 @@ export default function LandingPage() {
           <span className="text-2xl font-headline font-black tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,200,0,0.3)]">Horizon</span>
         </div>
         <div className="flex gap-4 items-center">
-          <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-            Log in
-          </Link>
-          <Link href="/signup">
-            <Button className="h-10 px-6 rounded-full font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_rgba(255,200,0,0.4)] transition-all">
-              Get Started
-            </Button>
-          </Link>
+          {!isUserLoading && user ? (
+            <Link href="/dashboard">
+              <Button className="h-10 px-6 rounded-full font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_rgba(255,200,0,0.4)] transition-all">
+                Enter Dashboard
+              </Button>
+            </Link>   
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
+                Log in
+              </Link>
+              <Link href="/signup">
+                <Button className="h-10 px-6 rounded-full font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_rgba(255,200,0,0.4)] transition-all">
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </header>
 

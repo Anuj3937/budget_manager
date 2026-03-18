@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-// @ts-expect-error: ThreeJS JSM types often mismatch with local resolutions
+import { useUser } from '@/firebase';
+// @ts-expect-error: ThreeJS JSM types
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 // @ts-expect-error: ThreeJS JSM types
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
@@ -14,6 +15,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 gsap.registerPlugin(ScrollTrigger);
 
 export const Component = () => {
+  const { user, isUserLoading } = useUser();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
