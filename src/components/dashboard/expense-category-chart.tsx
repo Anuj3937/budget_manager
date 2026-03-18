@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Pie, PieChart, ResponsiveContainer, Cell, Sector } from "recharts";
 
 import {
   Card,
@@ -89,10 +89,20 @@ export default function ExpenseCategoryChart({
                 dataKey="value"
                 nameKey="name"
                 innerRadius={60}
+                outerRadius={80}
                 strokeWidth={5}
                 onClick={(entry) => onCategorySelect && onCategorySelect(entry.name)}
-                className="cursor-pointer transition-all hover:opacity-80"
+                className="cursor-pointer transition-all"
               >
+                {data.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.fill} 
+                    opacity={selectedCategory ? (selectedCategory === entry.name ? 1 : 0.3) : 1}
+                    className="hover:opacity-80 transition-opacity outline-none"
+                    style={{ filter: selectedCategory === entry.name ? "drop-shadow(0 0 10px rgba(255, 200, 0, 0.5))" : "none" }}
+                  />
+                ))}
               </Pie>
               <ChartLegend
                 content={<ChartLegendContent nameKey="name" />}

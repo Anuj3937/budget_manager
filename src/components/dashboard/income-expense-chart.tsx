@@ -45,6 +45,10 @@ export default function IncomeExpenseChart({ data }: { data: ChartData }) {
           <ResponsiveContainer>
             <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 5 }}>
               <defs>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="8" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
                 <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="var(--color-income)" stopOpacity={0.8}/>
                   <stop offset="95%" stopColor="var(--color-income)" stopOpacity={0}/>
@@ -82,6 +86,7 @@ export default function IncomeExpenseChart({ data }: { data: ChartData }) {
                 strokeWidth={3}
                 fillOpacity={1} 
                 fill="url(#colorIncome)" 
+                style={{ filter: "url(#glow)" }}
               />
               <Area 
                 type="monotone" 
@@ -90,6 +95,7 @@ export default function IncomeExpenseChart({ data }: { data: ChartData }) {
                 strokeWidth={3}
                 fillOpacity={1} 
                 fill="url(#colorExpenses)" 
+                style={{ filter: "url(#glow)" }}
               />
             </AreaChart>
           </ResponsiveContainer>

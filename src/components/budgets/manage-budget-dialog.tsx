@@ -171,7 +171,7 @@ export function ManageBudgetDialog({
                 <FormItem>
                   <FormLabel>Limit Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="1000.00" {...field} />
+                    <Input type="number" placeholder="1000.00" {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
