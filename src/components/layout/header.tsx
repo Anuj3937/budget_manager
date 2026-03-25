@@ -8,7 +8,6 @@ import { useAuth, useUser } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 const getTitleFromPathname = (pathname: string) => {
   switch (pathname) {
@@ -53,7 +52,6 @@ export default function AppHeader() {
             </Button>
           </ManageTransactionDialog>
         )}
-        <ThemeToggle />
         {user && (
           <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign Out">
             <LogOut className="h-5 w-5" />

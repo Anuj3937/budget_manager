@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { PiggyBank, BrainCircuit, Loader2 } from "lucide-react";
+import { PiggyBank, BrainCircuit, Loader2, FolderX } from "lucide-react";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { doc, collection, serverTimestamp } from "firebase/firestore";
 
@@ -233,7 +233,13 @@ export default function IncomeAllocator({
               );
             })}
              {expenseCategories.length === 0 && (
-                <p className="text-sm text-muted-foreground">No expense categories found. Add some on the Categories page to start allocating.</p>
+                <div className="flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500 border border-dashed border-white/10 rounded-xl bg-black/20">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3 ring-1 ring-primary/20">
+                    <FolderX className="w-6 h-6 text-primary" />
+                  </div>
+                  <h4 className="font-semibold text-slate-300">No Expense Categories</h4>
+                  <p className="text-sm text-muted-foreground mt-1">Navigate to the Settings tab to map out some primary operating expenses. Come back here to allocate your capital.</p>
+                </div>
              )}
           </div>
             

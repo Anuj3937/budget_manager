@@ -35,6 +35,11 @@ export default function BudgetTracker({ budgets, transactions }: { budgets: Budg
         {budgets.map((budget) => {
           const spent = calculateSpending(budget.categoryId);
           const progress = (spent / budget.limitAmount) * 100;
+          
+          let progressColor = "[&>div]:bg-emerald-500";
+          if (progress >= 70 && progress <= 90) progressColor = "[&>div]:bg-amber-400";
+          else if (progress > 90) progressColor = "[&>div]:bg-destructive";
+
           const isOverBudget = progress > 90;
 
           return (
@@ -49,7 +54,7 @@ export default function BudgetTracker({ budgets, transactions }: { budgets: Budg
                   {formatCurrency(budget.limitAmount)}
                 </p>
               </div>
-              <div className={cn(isOverBudget && "[&>div]:bg-destructive")}>
+              <div className={progressColor}>
                  <Progress value={progress} />
               </div>
             </div>
