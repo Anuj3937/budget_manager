@@ -1,6 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Download, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -62,7 +62,20 @@ export default function TransactionHistory({ transactions }: { transactions: Tra
         </Button>
       </CardHeader>
       <CardContent>
-        <DataTable columns={transactionColumns} data={transactions} filterColumn="categoryName" />
+        <DataTable 
+          columns={transactionColumns} 
+          data={transactions} 
+          filterColumn="categoryName" 
+          emptyState={
+            <div className="flex flex-col items-center justify-center p-8 text-center animate-in fade-in zoom-in duration-500">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 ring-1 ring-primary/20">
+                <SearchX className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(255,200,0,0.5)]" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-200 mb-1">No Transactions Found</h3>
+              <p className="text-sm text-slate-500 max-w-sm">We couldn't find any financial activity mapping to these specific parameters. Adjust your dashboard filters to see more data.</p>
+            </div>
+          }
+        />
       </CardContent>
     </Card>
   );

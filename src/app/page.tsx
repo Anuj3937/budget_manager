@@ -5,6 +5,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/firebase";
 import { Component as HorizonHero } from "@/components/ui/horizon-hero-section";
+import { FeatureSection } from "@/components/landing/feature-section";
+import { TrustSection } from "@/components/landing/trust-section";
+import { LandingFooter } from "@/components/landing/landing-footer";
 
 export default function LandingPage() {
   const { user, isUserLoading } = useUser();
@@ -62,6 +65,11 @@ export default function LandingPage() {
 
       {/* Hero Engine */}
       <HorizonHero />
+
+      {/* Narrative Pipeline */}
+      <FeatureSection />
+      <TrustSection />
+      <LandingFooter />
     </div>
   );
 }

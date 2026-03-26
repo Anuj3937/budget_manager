@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 import { Timestamp } from 'firebase/firestore';
 
 import AppHeader from "@/components/layout/header";
@@ -127,6 +127,32 @@ export default function DashboardPage() {
     fill: categoryColors.get(b.categoryId) || `hsl(var(--muted-foreground))`
   })).filter(d => d.value > 0) || [], [budgets, filteredTransactions, categoryColors]);
 
+  const aiInsight = useMemo(() => {
+    if (summaryData.monthlyIncome === 0 && summaryData.monthlyExpenses === 0) {
+      return "Log your first transactions to activate intelligent cashflow analysis.";
+    }
+    
+    if (summaryData.monthlyIncome === 0) {
+      return "Warning: Critical capital bleed with zero recorded income. Secure cash reserves immediately.";
+    }
+    
+    const burnRate = (summaryData.monthlyExpenses / summaryData.monthlyIncome) * 100;
+    
+    let topCategory = "Miscellaneous";
+    if (expenseByCategoryData && expenseByCategoryData.length > 0) {
+       const top = [...expenseByCategoryData].sort((a,b) => b.value - a.value)[0];
+       topCategory = top.name;
+    }
+
+    if (burnRate > 90) {
+      return `Critical Burn Rate: You are pacing to consume ${Math.round(burnRate)}% of your income. Throttle spend in '${topCategory}'.`;
+    } else if (burnRate > 60) {
+      return `Moderate Cashflow: Capital consumption is at ${Math.round(burnRate)}%. Optimize '${topCategory}' to increase savings velocity.`;
+    } else {
+      return `Elite Efficiency: You are retaining ${Math.round(100 - burnRate)}% of your income. Your cash reserves are scaling exponentially.`;
+    }
+  }, [summaryData, expenseByCategoryData]);
+
   // Overall loading state for skeleton UI
   const isLoading = isUserLoading || transactionsLoading || budgetsLoading || categoriesLoading;
   
@@ -159,7 +185,10 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-headline font-bold text-foreground">Analytics Overview</h1>
-            <p className="text-muted-foreground text-sm">Monitor your elite cashflow trends over custom intervals.</p>
+            <div className="flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 w-fit shrink-0">
+               <Sparkles className="w-4 h-4 text-primary shrink-0" />
+               <p className="text-xs font-medium text-slate-300">{aiInsight}</p>
+            </div>
           </div>
           <DatePickerWithRange date={dateRange} setDate={setDateRange} />
         </div>

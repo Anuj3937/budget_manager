@@ -138,11 +138,11 @@ export const Component = () => {
           const color = new THREE.Color();
           const colorChoice = Math.random();
           if (colorChoice < 0.7) {
-            color.setHSL(0, 0, 0.8 + Math.random() * 0.2);
+            color.setHSL(0.12, 0.8, 0.8 + Math.random() * 0.2); // Golden hue
           } else if (colorChoice < 0.9) {
-            color.setHSL(0.08, 0.5, 0.8);
+            color.setHSL(0.08, 0.9, 0.7); // Deep Orange/Amber
           } else {
-            color.setHSL(0.6, 0.5, 0.8);
+            color.setHSL(0.15, 0.6, 0.9); // Pale Yellow
           }
           
           colors[j * 3] = color.r;
@@ -211,8 +211,8 @@ export const Component = () => {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          color1: { value: new THREE.Color(0x0033ff) },
-          color2: { value: new THREE.Color(0xff0066) },
+          color1: { value: new THREE.Color(0xffaa00) }, // Deep Amber
+          color2: { value: new THREE.Color(0xffea00) }, // Brilliant Gold
           opacity: { value: 0.3 }
         },
         vertexShader: `
@@ -266,10 +266,10 @@ export const Component = () => {
       const { current: refs } = threeRefs;
       if (!refs.scene) return;
       const layers = [
-        { distance: -50, height: 60, color: 0x1a1a2e, opacity: 1 },
-        { distance: -100, height: 80, color: 0x16213e, opacity: 0.8 },
-        { distance: -150, height: 100, color: 0x0f3460, opacity: 0.6 },
-        { distance: -200, height: 120, color: 0x0a4668, opacity: 0.4 }
+        { distance: -50, height: 60, color: 0x1f1405, opacity: 1 },
+        { distance: -100, height: 80, color: 0x160e03, opacity: 0.8 },
+        { distance: -150, height: 100, color: 0x0f0a02, opacity: 0.6 },
+        { distance: -200, height: 120, color: 0x080501, opacity: 0.4 }
       ];
 
       layers.forEach((layer, index) => {
@@ -330,7 +330,7 @@ export const Component = () => {
           
           void main() {
             float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-            vec3 atmosphere = vec3(0.3, 0.6, 1.0) * intensity;
+            vec3 atmosphere = vec3(1.0, 0.8, 0.3) * intensity; // Golden atmosphere
             
             float pulse = sin(time * 2.0) * 0.1 + 0.9;
             atmosphere *= pulse;
@@ -522,9 +522,8 @@ export const Component = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const maxScroll = documentHeight - windowHeight;
-      const progress = Math.min(scrollY / maxScroll, 1);
+      const maxScroll = (containerRef.current?.offsetHeight || windowHeight * 3) - windowHeight;
+      const progress = Math.max(0, Math.min(scrollY / maxScroll, 1));
       
       setScrollProgress(progress);
       const newSection = Math.floor(progress * totalSections);
@@ -599,7 +598,7 @@ export const Component = () => {
           <span></span>
           <span></span>
         </div>
-        <div className="vertical-text">SPACE</div>
+        <div className="vertical-text">CAPITAL</div>
       </div>
 
       {/* Main content */}
@@ -610,10 +609,10 @@ export const Component = () => {
         
         <div ref={subtitleRef} className="hero-subtitle cosmos-subtitle">
           <p className="subtitle-line">
-            Where vision meets reality, 
+            Command your capital, 
           </p>
           <p className="subtitle-line">
-            we shape the future of tomorrow
+            shape the future of your wealth
           </p>
         </div>
       </div>
@@ -637,22 +636,22 @@ export const Component = () => {
        {[...Array(2)].map((_, i) => {
           const titles: Record<number, string> = {
             0: 'HORIZON',
-            1: 'COSMOS',
-            2: 'INFINITY'
+            1: 'CLARITY',
+            2: 'VELOCITY'
           };
           
           const subtitles: Record<number, {line1: string, line2: string}> = {
             0: {
-              line1: 'Where vision meets reality,',
-              line2: 'we shape the future of tomorrow'
+              line1: 'Command your capital,',
+              line2: 'shape the future of your wealth'
             },
             1: {
-              line1: 'Beyond the boundaries of imagination,',
-              line2: 'lies the universe of possibilities'
+              line1: 'Beyond spreadsheets and noise,',
+              line2: 'lies absolute financial insight'
             },
             2: {
-              line1: 'In the space between thought and creation,',
-              line2: 'we find the essence of true innovation'
+              line1: 'In the space between income and expense,',
+              line2: 'we find the mathematics of true growth'
             }
           };
           
