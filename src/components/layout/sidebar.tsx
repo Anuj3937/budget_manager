@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderKanban, ListChecks, LineChart } from "lucide-react";
+import { LayoutDashboard, FolderKanban, ListChecks, LineChart, Calculator, BookOpen, Users } from "lucide-react";
 import {
   Sidebar,
   SidebarHeader,
@@ -34,7 +34,7 @@ export default function AppSidebar() {
           <SidebarMenuItem>
             <Link href="/dashboard">
               <SidebarMenuButton
-                isActive={pathname === "/dashboard"}
+                isActive={pathname === "/dashboard" || pathname?.endsWith("/dashboard")}
                 tooltip="Dashboard"
               >
                 <LayoutDashboard />
@@ -45,7 +45,7 @@ export default function AppSidebar() {
           <SidebarMenuItem>
              <Link href="/budgets">
               <SidebarMenuButton
-                isActive={pathname === "/budgets"}
+                isActive={pathname === "/budgets" || pathname?.endsWith("/budgets")}
                 tooltip="Budgets"
               >
                 <FolderKanban />
@@ -56,7 +56,7 @@ export default function AppSidebar() {
           <SidebarMenuItem>
             <Link href="/categories">
               <SidebarMenuButton
-                isActive={pathname === "/categories"}
+                isActive={pathname === "/categories" || pathname?.endsWith("/categories")}
                 tooltip="Categories"
               >
                 <ListChecks />
@@ -67,11 +67,44 @@ export default function AppSidebar() {
           <SidebarMenuItem>
             <Link href="/reports">
               <SidebarMenuButton
-                isActive={pathname === "/reports"}
+                isActive={pathname === "/reports" || pathname?.endsWith("/reports")}
                 tooltip="Reports"
               >
                 <LineChart />
                 <span>Reports</span>
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <Link href="/tax-hub">
+              <SidebarMenuButton
+                isActive={pathname === "/tax-hub" || pathname?.endsWith("/tax-hub")}
+                tooltip="Tax Hub"
+              >
+                <Calculator />
+                <span>Tax Hub</span>
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <Link href="/shared-wallets">
+              <SidebarMenuButton
+                isActive={pathname === "/shared-wallets" || pathname?.endsWith("/shared-wallets")}
+                tooltip="Shared Wallets"
+              >
+                <Users />
+                <span>Shared Wallets</span>
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <Link href="/blog">
+              <SidebarMenuButton
+                isActive={pathname?.includes("/blog")}
+                tooltip="Learn"
+              >
+                <BookOpen />
+                <span>Learn</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>

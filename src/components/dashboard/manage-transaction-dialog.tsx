@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, type ReactNode, useMemo, useEffect } from "react";
+import { useState, type ReactNode, useMemo, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Loader2, Zap } from "lucide-react";
 import { collection, serverTimestamp, doc } from "firebase/firestore";
 
 import {
@@ -53,7 +53,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import type { Category, Transaction } from "@/lib/types";
+import type { Category, Transaction, AutoRule } from "@/lib/types";
+import { matchRule } from "@/lib/rule-engine";
 
 const transactionSchema = z.object({
   amount: z.coerce.number().positive("Amount must be a positive number."),
@@ -88,7 +89,26 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
     return collection(firestore, `users/${user.uid}/categories`);
   }, [firestore, user]);
 
+  const rulesQuery = useMemoFirebase(() => {
+    if (!user) return null;
+    return collection(firestore, `users/${user.uid}/autoRules`);
+  }, [firestore, user]);
+
   const { data: categories } = useCollection<Category>(categoriesQuery);
+  const { data: autoRules } = useCollection<AutoRule>(rulesQuery);
+
+  const [autoMatched, setAutoMatched] = useState<string | null>(null);
+
+  const handleNotesChange = useCallback((value: string) => {
+    if (!autoRules?.length) return;
+    const matched = matchRule(value, autoRules);
+    if (matched) {
+      form.setValue('categoryId', matched.categoryId);
+      setAutoMatched(matched.categoryName);
+    } else {
+      setAutoMatched(null);
+    }
+  }, [autoRules, form]);
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
@@ -314,8 +334,18 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
                       placeholder="Optional notes about the transaction"
                       className="resize-none"
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleNotesChange(e.target.value);
+                      }}
                     />
                   </FormControl>
+                  {autoMatched && (
+                    <p className="text-xs text-primary flex items-center gap-1 mt-1">
+                      <Zap className="h-3 w-3" />
+                      Auto-matched to <span className="font-semibold">{autoMatched}</span>
+                    </p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
