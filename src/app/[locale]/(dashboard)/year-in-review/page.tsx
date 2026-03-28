@@ -110,7 +110,7 @@ export default function YearInReviewPage() {
     
     // Explicitly calculate largest transaction to fix TS inference issues
     const expenses = transactions.filter(t => t.type === 'expense');
-    const largestTransaction = expenses.length > 0 
+    largestTransaction = expenses.length > 0 
       ? expenses.reduce((max, t) => t.amount > max.amount ? t : max, expenses[0])
       : null;
 
