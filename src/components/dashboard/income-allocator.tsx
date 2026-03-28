@@ -28,12 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Category, Budget } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-};
+import { useCurrency } from '@/hooks/use-currency';
 
 const allocationSchema = z.object({
   totalIncome: z.coerce
@@ -64,6 +59,7 @@ export default function IncomeAllocator({
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useUser();
+  const { format: formatCurrency } = useCurrency();
 
   const expenseCategories = useMemo(
     () => categories.filter((c) => c.type === "expense"),

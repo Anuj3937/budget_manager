@@ -23,12 +23,7 @@ import { ManageTransactionDialog } from "./manage-transaction-dialog";
 import { DeleteConfirmationDialog } from "../shared/delete-confirmation-dialog";
 import { useToast } from "@/hooks/use-toast";
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-};
+import { useCurrency } from '@/hooks/use-currency';
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -59,7 +54,8 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
+    cell: function AmountCell({ row }) {
+      const { format: formatCurrency } = useCurrency();
       const amount = parseFloat(row.getValue("amount"));
       const type = row.original.type;
       const formatted = formatCurrency(amount);

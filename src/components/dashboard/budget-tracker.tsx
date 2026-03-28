@@ -9,16 +9,10 @@ import { Progress } from "@/components/ui/progress";
 import type { Budget, Transaction } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
+import { useCurrency } from '@/hooks/use-currency';
 
 export default function BudgetTracker({ budgets, transactions }: { budgets: Budget[], transactions: Transaction[] }) {
+  const { format: formatCurrency } = useCurrency();
   const calculateSpending = (categoryId: string) => {
     return transactions
       .filter(t => t.type === 'expense' && t.categoryId === categoryId)

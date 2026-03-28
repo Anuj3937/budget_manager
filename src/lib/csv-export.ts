@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import type { Transaction } from "./types";
-import { formatCurrency } from "./rule-engine";
 
 /**
  * Converts an array of transactions into a CSV format string.

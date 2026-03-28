@@ -20,7 +20,7 @@ import AppHeader from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/lib/rule-engine";
+import { useCurrency } from "@/hooks/use-currency";
 import type { Transaction } from "@/lib/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +30,7 @@ export default function YearInReviewPage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+  const { format: formatCurrency } = useCurrency();
 
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -197,7 +198,7 @@ export default function YearInReviewPage() {
                    <CardContent className="p-8 md:p-12 relative z-10">
                       <Badge className="bg-purple-500/20 text-purple-300 hover:bg-purple-500/20 mb-6">The Big Picture</Badge>
                       <h2 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tighter">
-                          {formatCurrency(insights.netSavings, 'en-IN', 'INR')}
+                          {formatCurrency(insights.netSavings)}
                       </h2>
                       <p className="text-xl text-white/70">
                          Total money stashed away this year. You saved <strong className="text-white">{insights.savingsRate}%</strong> of your income!
@@ -213,7 +214,7 @@ export default function YearInReviewPage() {
                       </Badge>
                       <h3 className="text-gray-400 text-sm font-medium uppercase tracking-wider mb-1">Most Spent On</h3>
                       <p className="text-3xl font-bold text-white mb-2">{insights.topCategory.name}</p>
-                      <p className="text-amber-400 font-mono text-xl">{formatCurrency(insights.topCategory.amount, 'en-IN', 'INR')}</p>
+                      <p className="text-amber-400 font-mono text-xl">{formatCurrency(insights.topCategory.amount)}</p>
                    </CardContent>
                 </Card>
 
@@ -225,7 +226,7 @@ export default function YearInReviewPage() {
                       </Badge>
                       <h3 className="text-gray-400 text-sm font-medium uppercase tracking-wider mb-1">Highest Spend Month</h3>
                       <p className="text-3xl font-bold text-white mb-2">{insights.topMonth.name}</p>
-                      <p className="text-rose-400 font-mono text-xl">{formatCurrency(insights.topMonth.amount, 'en-IN', 'INR')}</p>
+                      <p className="text-rose-400 font-mono text-xl">{formatCurrency(insights.topMonth.amount)}</p>
                    </CardContent>
                 </Card>
 
@@ -243,7 +244,7 @@ export default function YearInReviewPage() {
                         </div>
                         <div className="text-left md:text-right">
                            <p className="text-4xl md:text-5xl font-mono text-emerald-400 font-light">
-                              {formatCurrency(insights.largestTransaction.amount, 'en-IN', 'INR')}
+                              {formatCurrency(insights.largestTransaction.amount)}
                            </p>
                         </div>
                      </CardContent>

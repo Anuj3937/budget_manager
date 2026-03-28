@@ -20,12 +20,7 @@ import { ManageBudgetDialog } from "./manage-budget-dialog";
 import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { useToast } from "@/hooks/use-toast";
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(amount);
-};
+import { useCurrency } from '@/hooks/use-currency';
 
 export const budgetColumns = (categories: Category[]): ColumnDef<Budget>[] => [
   {
@@ -45,7 +40,8 @@ export const budgetColumns = (categories: Category[]): ColumnDef<Budget>[] => [
   {
     accessorKey: "limitAmount",
     header: () => <div className="text-right">Limit</div>,
-    cell: ({ row }) => {
+    cell: function LimitCell({ row }) {
+      const { format: formatCurrency } = useCurrency();
       const amount = parseFloat(row.getValue("limitAmount"));
       return <div className="text-right font-medium">{formatCurrency(amount)}</div>;
     },

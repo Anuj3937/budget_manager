@@ -14,12 +14,7 @@ type SummaryCardsProps = {
   isLoading: boolean;
 };
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-};
+import { useCurrency } from '@/hooks/use-currency';
 
 const SummaryCardSkeleton = () => (
   <Card>
@@ -35,6 +30,7 @@ const SummaryCardSkeleton = () => (
 );
 
 export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
+  const { currency } = useCurrency();
   if (isLoading) {
     return (
       <div className="grid gap-4 md:grid-cols-3 w-full">
@@ -54,7 +50,7 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            <NumberFlow value={data.totalBalance} format={{ style: 'currency', currency: 'USD' }} />
+            <NumberFlow value={data.totalBalance} format={{ style: 'currency', currency }} />
           </div>
           <p className="text-xs text-muted-foreground">+2.1% from last month</p>
         </CardContent>
@@ -66,7 +62,7 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-emerald-400">
-            <NumberFlow value={data.monthlyIncome} format={{ style: 'currency', currency: 'USD' }} />
+            <NumberFlow value={data.monthlyIncome} format={{ style: 'currency', currency }} />
           </div>
           <p className="text-xs text-muted-foreground">This month's earnings</p>
         </CardContent>
@@ -78,7 +74,7 @@ export default function SummaryCards({ data, isLoading }: SummaryCardsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-rose-400">
-            <NumberFlow value={data.monthlyExpenses} format={{ style: 'currency', currency: 'USD' }} />
+            <NumberFlow value={data.monthlyExpenses} format={{ style: 'currency', currency }} />
           </div>
           <p className="text-xs text-muted-foreground">This month's spending</p>
         </CardContent>
