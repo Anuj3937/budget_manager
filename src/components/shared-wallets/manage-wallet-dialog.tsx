@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import type { SharedWallet, WalletMember, WalletTransaction } from "@/lib/types";
-import { formatCurrency } from "@/lib/rule-engine";
+import { useCurrency } from "@/hooks/use-currency";
 
 interface ManageWalletDialogProps {
   wallet: SharedWallet;
@@ -41,6 +41,7 @@ export function ManageWalletDialog({ wallet, children }: ManageWalletDialogProps
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useUser();
+  const { format: formatCurrency } = useCurrency();
 
   const isAdmin = wallet.ownerUserId === user?.uid || wallet.members.find(m => m.userId === user?.uid)?.role === 'admin';
 
@@ -94,7 +95,7 @@ export function ManageWalletDialog({ wallet, children }: ManageWalletDialogProps
     
     const docRef = doc(firestore, `users/${wallet.ownerUserId}/sharedWallets/${wallet.id}`);
     updateDocumentNonBlocking(docRef, { members: updatedMembers, updatedAt: serverTimestamp() });
-    toast({ title: "Allowance updated", description: `Set to ${formatCurrency(amount, 'en-IN', 'INR')}` });
+    toast({ title: "Allowance updated", description: `Set to ${formatCurrency(amount)}` });
   };
 
   const handleTransactionApproval = (txnId: string, newStatus: 'approved' | 'rejected') => {
@@ -194,7 +195,7 @@ export function ManageWalletDialog({ wallet, children }: ManageWalletDialogProps
                            </Badge>
                            {member.allowance !== undefined && (
                              <p className="text-xs text-muted-foreground mt-1 font-medium flex items-center gap-1 justify-end">
-                               <Coins className="h-3 w-3" /> {formatCurrency(member.allowance, 'en-IN', 'INR')} / mo
+                               <Coins className="h-3 w-3" /> {formatCurrency(member.allowance)} / mo
                              </p>
                            )}
                          </div>
@@ -238,7 +239,7 @@ export function ManageWalletDialog({ wallet, children }: ManageWalletDialogProps
                               <Badge variant="outline" className="text-amber-500 border-amber-500/50 bg-amber-500/10">Needs Approval</Badge>
                               <span className="text-xs text-muted-foreground">{requester.name}</span>
                             </div>
-                            <p className="font-bold text-lg">{formatCurrency(txn.amount, 'en-IN', 'INR')}</p>
+                            <p className="font-bold text-lg">{formatCurrency(txn.amount)}</p>
                             <p className="text-sm font-medium">{txn.categoryName}</p>
                             {txn.notes && <p className="text-xs text-muted-foreground mt-1 italic">&quot;{txn.notes}&quot;</p>}
                           </div>
@@ -274,7 +275,7 @@ export function ManageWalletDialog({ wallet, children }: ManageWalletDialogProps
                          <p className="text-xs text-muted-foreground">{mockUserMap[txn.userId]?.name || 'Unknown'}</p>
                        </div>
                        <div className="text-right">
-                         <p className="font-bold">{formatCurrency(txn.amount, 'en-IN', 'INR')}</p>
+                         <p className="font-bold">{formatCurrency(txn.amount)}</p>
                          <Badge variant={txn.status === 'approved' ? 'default' : 'destructive'} className="text-[10px]">
                            {txn.status}
                          </Badge>

@@ -16,9 +16,10 @@ import {
   SECTION_80D_LIMIT_SELF,
   type TaxBreakdown,
 } from "@/lib/tax-calculator";
-import { formatCurrency } from "@/lib/rule-engine";
+import { useCurrency } from "@/hooks/use-currency";
 
 function TaxBreakdownCard({ breakdown, label }: { breakdown: TaxBreakdown; label: string }) {
+  const { format: formatCurrency } = useCurrency();
   return (
     <Card className={`relative overflow-hidden`}>
       <CardHeader className="pb-3">
@@ -77,6 +78,7 @@ function TaxBreakdownCard({ breakdown, label }: { breakdown: TaxBreakdown; label
 }
 
 export default function TaxHubPage() {
+  const { format: formatCurrency } = useCurrency();
   const [annualIncome, setAnnualIncome] = useState<number>(1200000);
   const [section80C, setSection80C] = useState<number>(0);
   const [section80D, setSection80D] = useState<number>(0);

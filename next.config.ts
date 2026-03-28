@@ -8,6 +8,10 @@ const pwa = withPWAInit({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
   register: true,
+  workboxOptions: {
+    // Exclude Firebase Auth redirect routes from being intercepted by the Service Worker
+    navigateFallbackDenylist: [/^\/__\/auth/],
+  },
 });
 
 const nextConfig: NextConfig = {

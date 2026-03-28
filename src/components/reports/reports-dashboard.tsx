@@ -18,12 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { generateTransactionsCSV, downloadCSV } from '@/lib/csv-export';
 
-const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(amount);
-  };
+import { useCurrency } from '@/hooks/use-currency';
 
 interface ReportsDashboardProps {
     date: DateRange | undefined;
@@ -33,6 +28,7 @@ interface ReportsDashboardProps {
 export default function ReportsDashboard({ date, setDate }: ReportsDashboardProps) {
     const { user } = useUser();
     const firestore = useFirestore();
+    const { format: formatCurrency } = useCurrency();
 
     const transactionsQuery = useMemoFirebase(() => {
         if (!user || !date?.from) return null;
