@@ -72,14 +72,41 @@ export type TaxDeductionMapping = {
   maxLimit?: number;
 };
 
-// ─── Shared Wallets (Multiplayer) ─────────────────────────────────
+// ─── Shared Wallets (Family/Multiplayer Mode) ───────────────────
+
+export type WalletRole = 'admin' | 'member';
+
+export type WalletMember = {
+  userId: string;
+  role: WalletRole;
+  /** Optional monthly allowance (if applicable, e.g., for kids) */
+  allowance?: number; 
+  joinedAt: Date | Timestamp;
+};
+
 export type SharedWallet = {
   id: string;
   name: string;
-  ownerUserId: string;
-  memberUserIds: string[];
+  ownerUserId: string; // The primary creator
+  members: WalletMember[]; // Replace memberUserIds with rich member objects
   /** Invite codes for easy onboarding */
   inviteCode: string;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
+};
+
+export type WalletTransaction = {
+  id: string;
+  walletId: string;
+  userId: string; // User who made the transaction
+  amount: number;
+  type: 'income' | 'expense';
+  categoryId: string;
+  categoryName?: string;
+  transactionDate: Date | Timestamp;
+  notes?: string;
+  /** Status for admin approvals (e.g., kids expenses > threshold) */
+  status: 'pending' | 'approved' | 'rejected';
   createdAt: Date | Timestamp;
   updatedAt: Date | Timestamp;
 };

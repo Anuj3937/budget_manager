@@ -49,6 +49,7 @@ import { Badge } from "@/components/ui/badge";
 import AppHeader from "@/components/layout/header";
 import { useToast } from "@/hooks/use-toast";
 import type { SharedWallet } from "@/lib/types";
+import { ManageWalletDialog } from "@/components/shared-wallets/manage-wallet-dialog";
 
 const walletSchema = z.object({
   name: z.string().min(1, "Wallet name is required.").max(50),
@@ -85,7 +86,11 @@ export default function SharedWalletsPage() {
     addDocumentNonBlocking(colRef, {
       name: data.name,
       ownerUserId: user.uid,
-      memberUserIds: [user.uid],
+      members: [{
+        userId: user.uid,
+        role: 'admin',
+        joinedAt: serverTimestamp(),
+      }],
       inviteCode: generateInviteCode(),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -105,7 +110,7 @@ export default function SharedWalletsPage() {
 
   function handleCopyCode(code: string) {
     navigator.clipboard.writeText(code);
-    toast({ title: "Invite Code Copied!", description: `Share "${code}" with your partner or roommate.` });
+    toast({ title: "Invite Code Copied!", description: `Share "${code}" with your partner or roommates.` });
   }
 
   if (isUserLoading || isLoading) {
@@ -128,7 +133,7 @@ export default function SharedWalletsPage() {
               Shared Wallets
             </h1>
             <p className="text-muted-foreground mt-1">
-              Manage shared expenses with your partner, roommates, or family.
+              Manage shared family expenses or split bills with roommates.
             </p>
           </div>
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
@@ -142,7 +147,7 @@ export default function SharedWalletsPage() {
               <DialogHeader>
                 <DialogTitle>Create Shared Wallet</DialogTitle>
                 <DialogDescription>
-                  Create a wallet and share the invite code with your squad.
+                  Create a wallet and share the invite code with your family.
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
@@ -154,7 +159,7 @@ export default function SharedWalletsPage() {
                       <FormItem>
                         <FormLabel>Wallet Name</FormLabel>
                         <FormControl>
-                          <Input placeholder='e.g., "Apartment Expenses"' {...field} />
+                          <Input placeholder='e.g., "Family Budget"' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -197,7 +202,7 @@ export default function SharedWalletsPage() {
                   </div>
                   <CardDescription className="flex items-center gap-1">
                     <UserPlus className="h-3 w-3" />
-                    {wallet.memberUserIds?.length || 1} member{(wallet.memberUserIds?.length || 1) > 1 ? 's' : ''}
+                    {wallet.members?.length || 1} member{(wallet.members?.length || 1) > 1 ? 's' : ''}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -214,9 +219,14 @@ export default function SharedWalletsPage() {
                       Copy
                     </Button>
                   </div>
-                  <Badge variant="outline" className="text-xs">
-                    Owner: You
-                  </Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge variant={wallet.ownerUserId === user?.uid ? "default" : "secondary"} className="text-xs">
+                       {wallet.ownerUserId === user?.uid ? 'Owner / Admin' : 'Member'}
+                    </Badge>
+                    <ManageWalletDialog wallet={wallet}>
+                      <Button variant="outline" size="sm">Manage {wallet.ownerUserId === user?.uid ? '(Admin)' : ''}</Button>
+                    </ManageWalletDialog>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -227,7 +237,7 @@ export default function SharedWalletsPage() {
               <Users className="h-12 w-12 text-muted-foreground/30 mb-4" />
               <h3 className="text-lg font-semibold mb-1">No shared wallets yet</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Create a wallet and invite your partner or roommates to track shared expenses together.
+                Create a wallet and invite your family to track shared expenses together.
               </p>
               <Button onClick={() => setCreateOpen(true)}>
                 <PlusCircle className="mr-2 h-4 w-4" />

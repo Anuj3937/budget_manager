@@ -1,0 +1,307 @@
+﻿diff --git a/package-lock.json b/package-lock.json
+index 67d83bf..7d070ce 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -34,6 +34,7 @@
+         "@tanstack/react-table": "^8.19.2",
+         "class-variance-authority": "^0.7.1",
+         "clsx": "^2.1.1",
++        "cmdk": "^1.0.4",
+         "date-fns": "^3.6.0",
+         "dotenv": "^16.5.0",
+         "embla-carousel-react": "^8.6.0",
+@@ -7516,6 +7517,22 @@
+         "node": ">=6"
+       }
+     },
++    "node_modules/cmdk": {
++      "version": "1.0.4",
++      "resolved": "https://registry.npmjs.org/cmdk/-/cmdk-1.0.4.tgz",
++      "integrity": "sha512-AnsjfHyHpQ/EFeAnG216WY7A5LiYCoZzCSygiLvfXC3H3LFGCprErteUcszaVluGOhuOTbJS3jWHrSDYPBBygg==",
++      "license": "MIT",
++      "dependencies": {
++        "@radix-ui/react-dialog": "^1.1.2",
++        "@radix-ui/react-id": "^1.1.0",
++        "@radix-ui/react-primitive": "^2.0.0",
++        "use-sync-external-store": "^1.2.2"
++      },
++      "peerDependencies": {
++        "react": "^18 || ^19 || ^19.0.0-rc",
++        "react-dom": "^18 || ^19 || ^19.0.0-rc"
++      }
++    },
+     "node_modules/collapse-white-space": {
+       "version": "2.1.0",
+       "resolved": "https://registry.npmjs.org/collapse-white-space/-/collapse-white-space-2.1.0.tgz",
+@@ -13696,6 +13713,15 @@
+         }
+       }
+     },
++    "node_modules/use-sync-external-store": {
++      "version": "1.6.0",
++      "resolved": "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.6.0.tgz",
++      "integrity": "sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==",
++      "license": "MIT",
++      "peerDependencies": {
++        "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
++      }
++    },
+     "node_modules/util-deprecate": {
+       "version": "1.0.2",
+       "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz",
+diff --git a/package.json b/package.json
+index 0c6532e..4f22aac 100644
+--- a/package.json
++++ b/package.json
+@@ -36,6 +36,7 @@
+     "@tanstack/react-table": "^8.19.2",
+     "class-variance-authority": "^0.7.1",
+     "clsx": "^2.1.1",
++    "cmdk": "^1.0.4",
+     "date-fns": "^3.6.0",
+     "dotenv": "^16.5.0",
+     "embla-carousel-react": "^8.6.0",
+diff --git a/src/app/[locale]/(dashboard)/shared-wallets/page.tsx b/src/app/[locale]/(dashboard)/shared-wallets/page.tsx
+index 111738c..53c7677 100644
+--- a/src/app/[locale]/(dashboard)/shared-wallets/page.tsx
++++ b/src/app/[locale]/(dashboard)/shared-wallets/page.tsx
+@@ -49,6 +49,7 @@ import { Badge } from "@/components/ui/badge";
+ import AppHeader from "@/components/layout/header";
+ import { useToast } from "@/hooks/use-toast";
+ import type { SharedWallet } from "@/lib/types";
++import { ManageWalletDialog } from "@/components/shared-wallets/manage-wallet-dialog";
+ 
+ const walletSchema = z.object({
+   name: z.string().min(1, "Wallet name is required.").max(50),
+@@ -85,7 +86,11 @@ export default function SharedWalletsPage() {
+     addDocumentNonBlocking(colRef, {
+       name: data.name,
+       ownerUserId: user.uid,
+-      memberUserIds: [user.uid],
++      members: [{
++        userId: user.uid,
++        role: 'admin',
++        joinedAt: serverTimestamp(),
++      }],
+       inviteCode: generateInviteCode(),
+       createdAt: serverTimestamp(),
+       updatedAt: serverTimestamp(),
+@@ -105,7 +110,7 @@ export default function SharedWalletsPage() {
+ 
+   function handleCopyCode(code: string) {
+     navigator.clipboard.writeText(code);
+-    toast({ title: "Invite Code Copied!", description: `Share "${code}" with your partner or roommate.` });
++    toast({ title: "Invite Code Copied!", description: `Share "${code}" with your partner or roommates.` });
+   }
+ 
+   if (isUserLoading || isLoading) {
+@@ -128,7 +133,7 @@ export default function SharedWalletsPage() {
+               Shared Wallets
+             </h1>
+             <p className="text-muted-foreground mt-1">
+-              Manage shared expenses with your partner, roommates, or family.
++              Manage shared family expenses or split bills with roommates.
+             </p>
+           </div>
+           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+@@ -142,7 +147,7 @@ export default function SharedWalletsPage() {
+               <DialogHeader>
+                 <DialogTitle>Create Shared Wallet</DialogTitle>
+                 <DialogDescription>
+-                  Create a wallet and share the invite code with your squad.
++                  Create a wallet and share the invite code with your family.
+                 </DialogDescription>
+               </DialogHeader>
+               <Form {...form}>
+@@ -154,7 +159,7 @@ export default function SharedWalletsPage() {
+                       <FormItem>
+                         <FormLabel>Wallet Name</FormLabel>
+                         <FormControl>
+-                          <Input placeholder='e.g., "Apartment Expenses"' {...field} />
++                          <Input placeholder='e.g., "Family Budget"' {...field} />
+                         </FormControl>
+                         <FormMessage />
+                       </FormItem>
+@@ -197,7 +202,7 @@ export default function SharedWalletsPage() {
+                   </div>
+                   <CardDescription className="flex items-center gap-1">
+                     <UserPlus className="h-3 w-3" />
+-                    {wallet.memberUserIds?.length || 1} member{(wallet.memberUserIds?.length || 1) > 1 ? 's' : ''}
++                    {wallet.members?.length || 1} member{(wallet.members?.length || 1) > 1 ? 's' : ''}
+                   </CardDescription>
+                 </CardHeader>
+                 <CardContent className="space-y-3">
+@@ -214,9 +219,14 @@ export default function SharedWalletsPage() {
+                       Copy
+                     </Button>
+                   </div>
+-                  <Badge variant="outline" className="text-xs">
+-                    Owner: You
+-                  </Badge>
++                  <div className="flex items-center justify-between">
++                    <Badge variant={wallet.ownerUserId === user?.uid ? "default" : "secondary"} className="text-xs">
++                       {wallet.ownerUserId === user?.uid ? 'Owner / Admin' : 'Member'}
++                    </Badge>
++                    <ManageWalletDialog wallet={wallet}>
++                      <Button variant="outline" size="sm">Manage {wallet.ownerUserId === user?.uid ? '(Admin)' : ''}</Button>
++                    </ManageWalletDialog>
++                  </div>
+                 </CardContent>
+               </Card>
+             ))}
+@@ -227,7 +237,7 @@ export default function SharedWalletsPage() {
+               <Users className="h-12 w-12 text-muted-foreground/30 mb-4" />
+               <h3 className="text-lg font-semibold mb-1">No shared wallets yet</h3>
+               <p className="text-sm text-muted-foreground mb-4">
+-                Create a wallet and invite your partner or roommates to track shared expenses together.
++                Create a wallet and invite your family to track shared expenses together.
+               </p>
+               <Button onClick={() => setCreateOpen(true)}>
+                 <PlusCircle className="mr-2 h-4 w-4" />
+diff --git a/src/app/[locale]/layout.tsx b/src/app/[locale]/layout.tsx
+index ea71df4..60cd8b3 100644
+--- a/src/app/[locale]/layout.tsx
++++ b/src/app/[locale]/layout.tsx
+@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
+ import { getMessages } from 'next-intl/server';
+ import { routing } from '@/i18n/routing';
+ import { notFound } from 'next/navigation';
++import { CommandMenu } from '@/components/layout/command-menu';
+ 
+ export const metadata: Metadata = {
+   title: {
+@@ -66,6 +67,7 @@ export default async function RootLayout({
+                 {children}
+               </div>
+             </FirebaseClientProvider>
++            <CommandMenu />
+             <Toaster />
+           </ThemeProvider>
+         </NextIntlClientProvider>
+diff --git a/src/app/sitemap.ts b/src/app/sitemap.ts
+index 02fcd9f..f389cb3 100644
+--- a/src/app/sitemap.ts
++++ b/src/app/sitemap.ts
+@@ -1,20 +1,31 @@
+ import { MetadataRoute } from 'next';
++import { getAllBlogPosts } from '@/lib/blog';
+ 
+ export default function sitemap(): MetadataRoute.Sitemap {
+   const baseUrl = 'https://horizon-finance.vercel.app';
+ 
+-  // These would ideally come from your CMS or Database
++  // Base static routes
+   const staticRoutes = [
+     '',
+     '/login',
+     '/signup',
+     '/blog',
++    '/tax-hub',
+   ].map((route) => ({
+     url: `${baseUrl}${route}`,
+     lastModified: new Date().toISOString().split('T')[0],
+     changeFrequency: 'weekly' as const,
+-    priority: route === '' ? 1 : 0.8,
++    priority: route === '' ? 1.0 : 0.8,
+   }));
+ 
+-  return [...staticRoutes];
++  // Dynamically fetch all MDX blog posts
++  const posts = getAllBlogPosts();
++  const dynamicBlogRoutes = posts.map((post) => ({
++    url: `${baseUrl}/blog/${post.slug}`,
++    lastModified: new Date(post.date).toISOString().split('T')[0],
++    changeFrequency: 'monthly' as const,
++    priority: 0.7,
++  }));
++
++  return [...staticRoutes, ...dynamicBlogRoutes];
+ }
+diff --git a/src/components/reports/reports-dashboard.tsx b/src/components/reports/reports-dashboard.tsx
+index 9eeddfc..cb1b840 100644
+--- a/src/components/reports/reports-dashboard.tsx
++++ b/src/components/reports/reports-dashboard.tsx
+@@ -14,6 +14,9 @@ import ExpenseCategoryChart from '@/components/dashboard/expense-category-chart'
+ import { DataTable } from '@/components/shared/data-table';
+ import { transactionColumns } from '@/components/dashboard/transaction-columns';
+ import { Skeleton } from '@/components/ui/skeleton';
++import { Button } from '@/components/ui/button';
++import { Download } from 'lucide-react';
++import { generateTransactionsCSV, downloadCSV } from '@/lib/csv-export';
+ 
+ const formatCurrency = (amount: number) => {
+     return new Intl.NumberFormat('en-US', {
+@@ -113,7 +116,22 @@ export default function ReportsDashboard({ date, setDate }: ReportsDashboardProp
+         <div className="space-y-6">
+             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                 <h1 className="font-headline text-2xl font-bold text-foreground">Financial Reports</h1>
+-                <DateRangePicker date={date} setDate={setDate} />
++                <div className="flex items-center gap-3">
++                    <Button 
++                        variant="outline" 
++                        disabled={!transactions || transactions.length === 0}
++                        onClick={() => {
++                            if (transactions) {
++                                const csv = generateTransactionsCSV(transactions);
++                                downloadCSV(csv, `horizon-export-${new Date().toISOString().split('T')[0]}.csv`);
++                            }
++                        }}
++                    >
++                        <Download className="mr-2 h-4 w-4" />
++                        Export CSV
++                    </Button>
++                    <DateRangePicker date={date} setDate={setDate} />
++                </div>
+             </div>
+ 
+             {/* Summary Cards */}
+diff --git a/src/lib/types.ts b/src/lib/types.ts
+index aac86c9..7e9c066 100644
+--- a/src/lib/types.ts
++++ b/src/lib/types.ts
+@@ -72,15 +72,42 @@ export type TaxDeductionMapping = {
+   maxLimit?: number;
+ };
+ 
+-// ΓöÇΓöÇΓöÇ Shared Wallets (Multiplayer) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
++// ΓöÇΓöÇΓöÇ Shared Wallets (Family/Multiplayer Mode) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
++
++export type WalletRole = 'admin' | 'member';
++
++export type WalletMember = {
++  userId: string;
++  role: WalletRole;
++  /** Optional monthly allowance (if applicable, e.g., for kids) */
++  allowance?: number; 
++  joinedAt: Date | Timestamp;
++};
++
+ export type SharedWallet = {
+   id: string;
+   name: string;
+-  ownerUserId: string;
+-  memberUserIds: string[];
++  ownerUserId: string; // The primary creator
++  members: WalletMember[]; // Replace memberUserIds with rich member objects
+   /** Invite codes for easy onboarding */
+   inviteCode: string;
+   createdAt: Date | Timestamp;
+   updatedAt: Date | Timestamp;
+ };
+ 
++export type WalletTransaction = {
++  id: string;
++  walletId: string;
++  userId: string; // User who made the transaction
++  amount: number;
++  type: 'income' | 'expense';
++  categoryId: string;
++  categoryName?: string;
++  transactionDate: Date | Timestamp;
++  notes?: string;
++  /** Status for admin approvals (e.g., kids expenses > threshold) */
++  status: 'pending' | 'approved' | 'rejected';
++  createdAt: Date | Timestamp;
++  updatedAt: Date | Timestamp;
++};
++

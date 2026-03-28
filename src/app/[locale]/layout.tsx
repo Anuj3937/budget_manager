@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
+import { CommandMenu } from '@/components/layout/command-menu';
 
 export const metadata: Metadata = {
   title: {
@@ -66,6 +67,7 @@ export default async function RootLayout({
                 {children}
               </div>
             </FirebaseClientProvider>
+            <CommandMenu />
             <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
