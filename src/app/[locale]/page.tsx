@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/firebase";
+import { useTranslations } from 'next-intl';
 import { Component as HorizonHero } from "@/components/ui/horizon-hero-section";
 import { FeatureSection } from "@/components/landing/feature-section";
 import { TrustSection } from "@/components/landing/trust-section";
@@ -11,6 +12,7 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 
 export default function LandingPage() {
   const { user, isUserLoading } = useUser();
+  const t = useTranslations('Navigation');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -45,17 +47,17 @@ export default function LandingPage() {
           {!isUserLoading && user ? (
             <Link href="/dashboard">
               <Button className="h-10 px-6 rounded-full font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_rgba(255,200,0,0.4)] transition-all">
-                Enter Dashboard
+                {t('enterDashboard')}
               </Button>
             </Link>   
           ) : (
             <>
               <Link href="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-                Log in
+                {t('logIn')}
               </Link>
               <Link href="/signup">
                 <Button className="h-10 px-6 rounded-full font-bold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_-5px_rgba(255,200,0,0.4)] transition-all">
-                  Get Started
+                  {t('getStarted')}
                 </Button>
               </Link>
             </>

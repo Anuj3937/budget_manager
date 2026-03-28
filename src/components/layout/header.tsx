@@ -10,18 +10,14 @@ import { signOut } from "firebase/auth";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const getTitleFromPathname = (pathname: string) => {
-  switch (pathname) {
-    case "/":
-      return "Dashboard";
-    case "/budgets":
-      return "Budgets";
-    case "/categories":
-      return "Categories";
-    case "/reports":
-      return "Reports";
-    default:
-      return "Horizon";
-  }
+  if (pathname.endsWith("/dashboard") || pathname === "/") return "Dashboard";
+  if (pathname.endsWith("/budgets")) return "Budgets";
+  if (pathname.endsWith("/categories")) return "Categories";
+  if (pathname.endsWith("/reports")) return "Reports";
+  if (pathname.endsWith("/tax-hub")) return "Tax Hub";
+  if (pathname.endsWith("/shared-wallets")) return "Shared Wallets";
+  if (pathname.includes("/blog")) return "Learn";
+  return "Horizon";
 };
 
 

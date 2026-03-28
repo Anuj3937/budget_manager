@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { collection, query, orderBy } from "firebase/firestore";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { PlusCircle, Loader2, Zap } from "lucide-react";
 import { useFirestore, useUser, useCollection, useMemoFirebase } from "@/firebase";
 import type { Category } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import AppHeader from "@/components/layout/header";
 import { categoryColumns } from "@/components/categories/columns";
 import { DataTable } from "@/components/shared/data-table";
 import { ManageCategoryDialog } from "@/components/categories/manage-category-dialog";
+import { ManageRulesDialog } from "@/components/categories/manage-rules-dialog";
 
 export default function CategoriesPage() {
   const { user, isUserLoading } = useUser();
@@ -49,12 +50,20 @@ export default function CategoriesPage() {
               <CardTitle>Categories</CardTitle>
               <CardDescription>Manage your income and expense categories.</CardDescription>
             </div>
-            <ManageCategoryDialog>
-              <Button>
-                <PlusCircle className="mr-2" />
-                Add Category
-              </Button>
-            </ManageCategoryDialog>
+            <div className="flex items-center gap-2">
+              <ManageRulesDialog>
+                <Button variant="outline">
+                  <Zap className="mr-2 h-4 w-4 text-primary" />
+                  Auto-Rules
+                </Button>
+              </ManageRulesDialog>
+              <ManageCategoryDialog>
+                <Button>
+                  <PlusCircle className="mr-2" />
+                  Add Category
+                </Button>
+              </ManageCategoryDialog>
+            </div>
           </CardHeader>
           <CardContent>
             <DataTable columns={categoryColumns} data={categories || []} filterColumn="name" />

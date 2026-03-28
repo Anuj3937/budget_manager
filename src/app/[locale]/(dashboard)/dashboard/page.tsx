@@ -20,6 +20,7 @@ const ExpenseCategoryChart = dynamic(() => import("@/components/dashboard/expens
 import TransactionHistory from "@/components/dashboard/transaction-history";
 import BudgetTracker from "@/components/dashboard/budget-tracker";
 import IncomeAllocator from "@/components/dashboard/income-allocator";
+import { InsightsWidget } from "@/components/dashboard/insights-widget";
 import OnboardingWizard from '@/components/onboarding/onboarding-wizard';
 
 import type { Transaction, Budget, Category } from "@/lib/types";
@@ -222,6 +223,7 @@ export default function DashboardPage() {
               </>
             ) : (
              <>
+                <InsightsWidget />
                 <BudgetTracker budgets={budgets || []} transactions={transactions || []} />
                 <IncomeAllocator categories={categories || []} budgets={budgets || []} />
              </>

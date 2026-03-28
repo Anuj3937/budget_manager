@@ -14,6 +14,9 @@ import ExpenseCategoryChart from '@/components/dashboard/expense-category-chart'
 import { DataTable } from '@/components/shared/data-table';
 import { transactionColumns } from '@/components/dashboard/transaction-columns';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Download } from 'lucide-react';
+import { generateTransactionsCSV, downloadCSV } from '@/lib/csv-export';
 
 const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -113,7 +116,22 @@ export default function ReportsDashboard({ date, setDate }: ReportsDashboardProp
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h1 className="font-headline text-2xl font-bold text-foreground">Financial Reports</h1>
-                <DateRangePicker date={date} setDate={setDate} />
+                <div className="flex items-center gap-3">
+                    <Button 
+                        variant="outline" 
+                        disabled={!transactions || transactions.length === 0}
+                        onClick={() => {
+                            if (transactions) {
+                                const csv = generateTransactionsCSV(transactions);
+                                downloadCSV(csv, `horizon-export-${new Date().toISOString().split('T')[0]}.csv`);
+                            }
+                        }}
+                    >
+                        <Download className="mr-2 h-4 w-4" />
+                        Export CSV
+                    </Button>
+                    <DateRangePicker date={date} setDate={setDate} />
+                </div>
             </div>
 
             {/* Summary Cards */}
