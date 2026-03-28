@@ -1,0 +1,17 @@
+{
+  "Navigation": {
+    "dashboard": "Dashboard",
+    "budgets": "Budgets",
+    "categories": "Categories",
+    "reports": "Reports",
+    "addTransaction": "Add Transaction",
+    "signOut": "Sign Out",
+    "logIn": "Log in",
+    "getStarted": "Get Started",
+    "enterDashboard": "Enter Dashboard"
+  },
+  "Landing": {
+    "headline": "Absolute clarity over your cashflow without the clutter.",
+    "subheadline": "The premium expense tracker that stops overspending."
+  }
+}
