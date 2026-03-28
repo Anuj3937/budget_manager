@@ -33,12 +33,13 @@ export default function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/60 backdrop-blur-md px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-border/40 bg-background/60 backdrop-blur-xl px-4 md:px-6 transition-all duration-300 shadow-sm">
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <SidebarTrigger className="md:hidden" />
       <div className="flex items-center gap-2">
-        <h1 className="font-headline text-xl font-bold text-foreground">{getTitleFromPathname(pathname)}</h1>
+        <h1 className="font-headline text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">{getTitleFromPathname(pathname)}</h1>
       </div>
-      <div className="ml-auto flex items-center gap-4">
+      <div className="ml-auto flex items-center gap-4 relative z-10">
         {user && (
           <ManageTransactionDialog>
             <Button>

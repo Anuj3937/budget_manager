@@ -21,7 +21,9 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
+    --btn-border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
+    --skeleton: 0 0% 90%;
     --ring: 43 74% 49%;
     --radius: 0.75rem;
     --chart-1: 12 76% 61%;
@@ -32,7 +34,7 @@
   }
 
   .dark {
-    --background: 222 47% 7%;
+    --background: 222 94% 5%;
     --foreground: 210 40% 98%;
 
     --card: 222 47% 7%;
@@ -57,7 +59,9 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
+    --btn-border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
+    --skeleton: 218 36% 16%;
     --ring: 43 74% 49%;
     
     --chart-1: 43 74% 49%;
@@ -80,6 +84,13 @@
 @layer utilities {
   .glassmorphism {
     @apply bg-background/60 backdrop-blur-md border border-border/50 shadow-lg;
+  }
+}
+
+@layer components {
+  .g-button {
+    @apply rounded-[var(--radius)] border;
+    border-color: hsl(var(--btn-border));
   }
 }
 .hero-container { position: relative; width: 100%; background: #000; color: #fff; }
