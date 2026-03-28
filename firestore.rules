@@ -178,6 +178,17 @@ service cloud.firestore {
         allow update: if isExistingOwner(userId) && isImmutableOwnerLink();
         allow delete: if isExistingOwner(userId);
       }
+
+      // -----------------------------------------------------------------------
+      // Auto Rules Subcollection (/users/{userId}/autoRules/{ruleId})
+      // -----------------------------------------------------------------------
+      match /autoRules/{ruleId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidOwnedDocCreation(userId);
+        allow update: if isExistingOwner(userId) && isImmutableOwnerLink();
+        allow delete: if isExistingOwner(userId);
+      }
     }
   }
 }

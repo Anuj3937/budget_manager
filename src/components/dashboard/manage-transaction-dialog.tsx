@@ -99,6 +99,10 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
 
   const [autoMatched, setAutoMatched] = useState<string | null>(null);
 
+  const form = useForm<TransactionFormValues>({
+    resolver: zodResolver(transactionSchema),
+  });
+
   const handleNotesChange = useCallback((value: string) => {
     if (!autoRules?.length) return;
     const matched = matchRule(value, autoRules);
@@ -109,10 +113,6 @@ export function ManageTransactionDialog({ children, transaction, open, onOpenCha
       setAutoMatched(null);
     }
   }, [autoRules, form]);
-
-  const form = useForm<TransactionFormValues>({
-    resolver: zodResolver(transactionSchema),
-  });
 
   useEffect(() => {
     if (isEditing && transaction) {
