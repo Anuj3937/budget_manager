@@ -429,7 +429,7 @@ const AnimatedForm = memo(function AnimatedForm({
               disabled={isLoading}
               onClick={onGoogleLogin}
             >
-              <Image
+              <img
                 src='https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png'
                 width={20}
                 height={20}
